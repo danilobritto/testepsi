@@ -38,24 +38,33 @@ function App() {
     <div className="container">
       <h1>Escala de Interesses por Áreas da Psicologia</h1>
       <p>Por favor, responda às seguintes perguntas avaliando seu interesse em cada atividade de 1 (nenhum interesse) a 5 (muito interesse).</p>
-
       <table border="1" cellpadding="10" cellspacing="0">
-        <thead >
+        <thead>
           <tr>
-            <td>Detesto/detestaria exercer essa atividade</td>
-            <td>Não gosto/não gostaria de exercer essa atividade</td>
-            <td>Imparcial/neutro(a) a esta atividade</td>
-            <td>Gosto/gostaria de exercer essa atividade</td>
-            <td>Adoro/adoraria exercer essa atividade</td>
+            <th>Valor</th>
+            <th>Descrição</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>1</td>
+            <td>Detesto/detestaria exercer essa atividade</td>
+          </tr>
+          <tr>
             <td>2</td>
+            <td>Não gosto/não gostaria de exercer essa atividade</td>
+          </tr>
+          <tr>
             <td>3</td>
+            <td>Imparcial/neutro(a) a esta atividade</td>
+          </tr>
+          <tr>
             <td>4</td>
+            <td>Gosto/gostaria de exercer essa atividade</td>
+          </tr>
+          <tr>
             <td>5</td>
+            <td>Adoro/adoraria exercer essa atividade</td>
           </tr>
         </tbody>
       </table>
