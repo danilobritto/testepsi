@@ -35,7 +35,7 @@ function classificarFaixa(index) {
 }
 
 function App() {
-  const [answers, setAnswers] = useState(Array(questions.length).fill(3));
+  const [answers, setAnswers] = useState(Array(questions.length).fill(''));
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
   const chartRef = useRef(null);
