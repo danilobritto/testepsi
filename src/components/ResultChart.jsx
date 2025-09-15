@@ -35,7 +35,7 @@ const getColor = (area, score) => {
   }
 };
 
-const ResultChart = ({ scores }) => {
+const ResultChart = ({ scores, chartRef }) => {
   const labels = Object.keys(scores);
   const percentisData = labels.map(area => getPercentil(area, scores[area]));
   const data = {
@@ -55,7 +55,7 @@ const ResultChart = ({ scores }) => {
     }
   };
 
-  return <Bar data={data} options={options} />;
+  return <Bar ref={chartRef} data={data} options={options} />;
 };
 
 export default ResultChart;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './App.css';
 import { questions } from './data/questions';
 import { areas } from './data/areas';
@@ -35,9 +35,10 @@ function classificarFaixa(index) {
 }
 
 function App() {
-  const [answers, setAnswers] = useState(Array(questions.length).fill(''));
+  const [answers, setAnswers] = useState(Array(questions.length).fill(3));
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
+  const chartRef = useRef(null);
 
   const handleChange = (index, value) => {
     const updated = [...answers];
@@ -61,6 +62,17 @@ function App() {
     }
     setResults(scores);
     setError('');
+  };
+
+  const handleSaveChart = () => {
+    if (chartRef.current) {
+      const chartInstance = chartRef.current;
+      const url = chartInstance.toBase64Image();
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'grafico.png';
+      link.click();
+    }
   };
 
   return (
@@ -161,7 +173,12 @@ function App() {
               </tbody>
             </table>
           </div>
-          <ResultChart scores={results} />
+          <div style={{ marginBottom: '16px' }}>
+            <button type="button" onClick={handleSaveChart}>
+              Salvar gráfico como imagem
+            </button>
+          </div>
+          <ResultChart scores={results} chartRef={chartRef} />
         </>
       )}
     </div>
