@@ -2,11 +2,38 @@ import React, { useState } from 'react';
 import './App.css';
 import { questions } from './data/questions';
 import { areas } from './data/areas';
-import { gabarito } from './data/gabarito';
 import ResultChart from './components/ResultChart';
+import { percentis } from './data/percentis';
+
+function classificarPorPercentil(area, score) {
+  const valores = percentis[area];
+  if (!valores) return "Indefinido";
+
+  if (score <= valores[2]) return "Baixo";
+  if (score <= valores[7]) return "Médio";
+  return "Alto";
+} 
+
+function obterPercentil(area, score) {
+  const valores = percentis[area];
+  if (!valores) return null;
+
+  for (let i = 0; i < valores.length; i++) {
+    if (score <= valores[i]) {
+      return [i * 10 + 10, classificarFaixa(i)];
+    }
+  }
+  return [90, "Alto"];
+}
+
+function classificarFaixa(index) {
+  if (index <= 2) return "Baixo";
+  if (index <= 7) return "Médio";
+  return "Alto";
+}
 
 function App() {
-  const [answers, setAnswers] = useState(Array(questions.length).fill(''));
+  const [answers, setAnswers] = useState(Array(questions.length).fill());
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
 
@@ -38,47 +65,57 @@ function App() {
     <div className="container">
       <h1>Escala de Interesses por Áreas da Psicologia</h1>
       <p>Por favor, responda às seguintes perguntas avaliando seu interesse em cada atividade de 1 (nenhum interesse) a 5 (muito interesse).</p>
-      <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-          <tr>
-            <th>Valor</th>
-            <th>Descrição</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Detesto/detestaria exercer essa atividade</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Não gosto/não gostaria de exercer essa atividade</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Imparcial/neutro(a) a esta atividade</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Gosto/gostaria de exercer essa atividade</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Adoro/adoraria exercer essa atividade</td>
-          </tr>
-        </tbody>
-      </table>
+
+    <table border="1" cellpadding="10" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Valor</th>
+          <th>Descrição</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Detesto/detestaria exercer essa atividade</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Não gosto/não gostaria de exercer essa atividade</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Imparcial/neutro(a) a esta atividade</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Gosto/gostaria de exercer essa atividade</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Adoro/adoraria exercer essa atividade</td>
+        </tr>
+      </tbody>
+    </table>
       <br /><br />
       <form>
         {questions.map((q, i) => (
           <div key={i} className="question">
             <label>{i + 1}. {q}</label>
-            <select value={answers[i]} onChange={(e) => handleChange(i, e.target.value)}>
-              <option value="">Selecione</option>
+            <div>
               {[1, 2, 3, 4, 5].map(val => (
-                <option key={val} value={val}>{val}</option>
+                <label key={val} style={{ marginLeft: '10px' }}>
+                  <input
+                    type="radio"
+                    name={`answer-${i}`}
+                    value={val}
+                    checked={answers[i] === val}
+                    onChange={() => handleChange(i, val)}
+                  />
+                  {val}
+                </label>
               ))}
-            </select>
+            </div>
+            <br /><br />
           </div>
         ))}
       </form>
@@ -102,18 +139,23 @@ function App() {
               <thead>
                 <tr>
                   <th>Área</th>
-                  <th>Escore</th>
+                  <th>Pontuação</th>
+                  <th>Percentil</th>
                   <th>Classificação</th>
                 </tr>
               </thead>
               <tbody>
-                {Object.entries(results).map(([area, score]) => (
-                  <tr key={area}>
-                    <td>{area}</td>
-                    <td>{score}</td>
-                    <td>{score >= gabarito[area].bruto ? gabarito[area].classif : "BAIXO"}</td>
-                  </tr>
-                ))}
+                {Object.entries(results).map(([area, score]) => {
+                  const [percentil, faixa] = obterPercentil(area, score);
+                  return (
+                    <tr key={area}>
+                      <td>{area}</td>
+                      <td>{score}</td>
+                      <td>{percentil}</td>
+                      <td>{faixa}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
