@@ -5,6 +5,8 @@ import { areas } from './data/areas';
 import ResultChart from './components/ResultChart';
 import { percentis } from './data/percentis';
 
+const percentilSteps = [10, 20, 25, 30, 40, 50, 60, 70, 75, 80, 90];
+
 function classificarPorPercentil(area, score) {
   const valores = percentis[area];
   if (!valores) return "Indefinido";
@@ -16,14 +18,14 @@ function classificarPorPercentil(area, score) {
 
 function obterPercentil(area, score) {
   const valores = percentis[area];
-  if (!valores) return null;
+  if (!valores) return [null, "Indefinido"];
 
   for (let i = 0; i < valores.length; i++) {
     if (score <= valores[i]) {
-      return [i * 10 + 10, classificarFaixa(i)];
+      return [percentilSteps[i], classificarFaixa(i)];
     }
   }
-  return [90, "Alto"];
+  return [percentilSteps[percentilSteps.length - 1], "Alto"];
 }
 
 function classificarFaixa(index) {
@@ -33,7 +35,7 @@ function classificarFaixa(index) {
 }
 
 function App() {
-  const [answers, setAnswers] = useState(Array(questions.length).fill());
+  const [answers, setAnswers] = useState(Array(questions.length).fill(2));
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
 
